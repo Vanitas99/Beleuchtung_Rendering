@@ -5,12 +5,13 @@ using UnityEngine;
 public class HitDetection : MonoBehaviour
 {
     Vector3 playerPosition;
-	Vector3 leftWallCollision, rightWallCollision;
+	Vector3 leftWallCollision, rightWallCollision, headCollision;
 
     Vector3 lightPosition;
     public bool isGrounded;
 	public bool leftBlocked;
 	public bool rightBlocked;
+	public bool upBlocked;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,8 +22,10 @@ public class HitDetection : MonoBehaviour
     void Update()
     {
 		playerPosition = gameObject.transform.position + Vector3.down * 0.4f ;
-		leftWallCollision = gameObject.transform.position + Vector3.left * 0.3f;
-		rightWallCollision = gameObject.transform.position + Vector3.right * 0.3f;
+		leftWallCollision = gameObject.transform.position + Vector3.left * 0.1f + Vector3.down*0.3f;
+		rightWallCollision = gameObject.transform.position + Vector3.right * 0.1f + Vector3.down * 0.3f;
+		headCollision = gameObject.transform.position + Vector3.up * 0.3f;
+
 
         if(isPlayerGrounded()) 
         {
@@ -56,6 +59,24 @@ public class HitDetection : MonoBehaviour
 			rightBlocked = false;
 			Debug.DrawRay(rightWallCollision, lightPosition - rightWallCollision);
 		}
+
+
+		if (HitHead())
+		{
+			upBlocked = true;
+			Debug.DrawRay(headCollision, lightPosition - headCollision, Color.red);
+		}else
+		{
+			upBlocked = false;
+			Debug.DrawRay(headCollision, lightPosition - headCollision);
+		}
+
+	}
+
+
+	private bool HitHead()
+	{
+		return (Physics.Raycast(headCollision, lightPosition - headCollision));
 	}
 
 	private bool HitLeftWall()
