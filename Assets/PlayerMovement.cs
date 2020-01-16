@@ -153,4 +153,12 @@ public class PlayerMovement : MonoBehaviour
         } else {
         }
     }
+
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.tag == "TrapStar")
+		{
+			Destroy(gameObject);
+		}
+	}
 }
