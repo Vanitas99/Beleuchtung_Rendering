@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
     {
 
 		handleInput();
-		
+		returnToSurface();
 	}
 
     private void FixedUpdate() 
@@ -55,14 +55,26 @@ public class PlayerMovement : MonoBehaviour
         checkIfGrounded();
 		
 		move(dir, false);
-        returnToSurface();
+        
     }
 
     private void returnToSurface() 
     {
-        if(returning && currentMovState != MovementStates.Falling)
+		
+        if(returning)
         {
-            transform.position += Vector3.up * 0.02f;
+			float step = 0.02f;
+			Vector3 stepVec = new Vector3(hitDetection.playerPosition.x, hitDetection.playerPosition.y + step, hitDetection.playerPosition.z) ;
+			if (!Physics.Raycast(stepVec, hitDetection.lightPosition - stepVec))
+			{
+				Debug.DrawRay(stepVec, hitDetection.lightPosition - stepVec);
+			} else
+			{
+				Debug.DrawRay(stepVec, hitDetection.lightPosition - stepVec,Color.red);
+				transform.position += new Vector3(0f, step, 0f);
+			}
+
+            //transform.position += new Vector3(0f,0.1f,0f);
 		}
     }
 
@@ -123,7 +135,10 @@ public class PlayerMovement : MonoBehaviour
 
 		if (hitDetection.upBlocked)
 		{
-			rigidbody.velocity = new Vector3(rigidbody.velocity.x, -rigidbody.velocity.y, rigidbody.velocity.z);
+			Debug.Log("TEST");
+			// TODO GOTTA FIX'EM
+			//	rigidbody.velocity = new Vector3(0f, 0f, 0f);
+			targetVelocity = new Vector3(rigidbody.velocity.x, -rigidbody.velocity.y, rigidbody.velocity.z);
 		}
 
 		rigidbody.velocity = Vector3.SmoothDamp(rigidbody.velocity, targetVelocity, ref m_Velocity, m_SmoothStep);
@@ -135,12 +150,12 @@ public class PlayerMovement : MonoBehaviour
 			rigidbody.AddForce(new Vector3(0, jumpForce, 0));
 		else
 		{
-			if (!doubleJump)
-			{
-				doubleJump = true;
-				// second jump is slightly more powerfull
-				rigidbody.AddForce(new Vector3(0, jumpForce*1.5f, 0));
-			}
+			//if (!doubleJump)
+			//{
+			//	doubleJump = true;
+			//	// second jump is slightly more powerfull
+			//	rigidbody.AddForce(new Vector3(0, jumpForce*1.5f, 0));
+			//}
 		}
 	}
 
