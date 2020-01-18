@@ -171,9 +171,15 @@ public class PlayerMovement : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.tag == "TrapStar")
+
+		switch(other.tag)
 		{
-			Destroy(gameObject);
+			case "TrapStar":
+				Destroy(gameObject);
+				break;
+			case "Finish":
+				Debug.Log("Reached Finish");
+				break;
 		}
 	}
 }
