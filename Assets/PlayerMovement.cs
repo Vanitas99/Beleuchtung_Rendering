@@ -6,6 +6,8 @@ public class PlayerMovement : MonoBehaviour
 {
     HitDetection hitDetection;
     Rigidbody rigidbody;
+	Animation animation;
+	public AnimationClip walk, idle, jump;
 
     Vector3 m_Velocity = Vector3.zero;
     [SerializeField] private float m_SmoothStep = .5f;
@@ -40,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
         Physics.gravity = new Vector3(0,-10,0);
         hitDetection = GetComponent<HitDetection>();
         rigidbody = GetComponent<Rigidbody>();
+		animation = GetComponent<Animation>();
     }
 
     // Update is called once per frame
@@ -168,6 +171,13 @@ public class PlayerMovement : MonoBehaviour
         } else {
         }
     }
+
+	void changeAnimation() {
+		if (dir > 0) {
+			animation.clip = walk;
+			animation.Play();
+		}
+	}
 
 	private void OnTriggerEnter(Collider other)
 	{
