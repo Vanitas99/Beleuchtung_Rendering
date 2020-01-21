@@ -2134,7 +2134,7 @@ ScriptedImporter:
     - {x: 0, y: 24}
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: -29, y: 123}
+    uvTransform: {x: -33, y: 121}
   - name: LeftUpperLeg
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -2699,7 +2699,7 @@ ScriptedImporter:
   platformSettings: []
   mosaicLayers: 1
   documentPivot: {x: 0, y: 0}
-  documentAlignment: 0
+  documentAlignment: 7
   importHiddenLayers: 0
   importedTextureWidth: 128
   importedTextureHeight: 256
