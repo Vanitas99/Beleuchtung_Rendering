@@ -1,29 +1,44 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
 	public static UIManager instance = null;
+	[Header("Panels for UI")]
+	public GameObject deathPanel;
+	public GameObject pausePanel;
+
 
 
 	private void Awake()
 	{
 		if (instance == null)
 			instance = this;
-		else if (instance != this)
-			Destroy(gameObject);
+	
 	}
 
-	// Start is called before the first frame update
-	void Start()
-    {
-        
-    }
+	#region Loading Functionality
+	
+	public void LoadDeathScreen()
+	{
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	}
+
+	#endregion
+
+	#region Button Functionality
+
+	public void OnQuit()
+	{
+		Application.Quit();
+	}
+
+	public void OnRetry()
+	{
+		deathPanel.SetActive(false);
+	}
+
+	#endregion
 }

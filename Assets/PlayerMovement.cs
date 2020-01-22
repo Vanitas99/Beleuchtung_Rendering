@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    HitDetection hitDetection;
+	#region Variables
+	HitDetection hitDetection;
     Rigidbody rigidbody;
 	Animator animator;
 
 	public ParticleSystem shadowDust;
+	private SoundManager soundManager;
 
     Vector3 m_Velocity = Vector3.zero;
     [SerializeField] private float m_SmoothStep = .01f;
@@ -39,14 +41,11 @@ public class PlayerMovement : MonoBehaviour
 
 	MovementStates currentMovState = MovementStates.Grounded;
 	MovementStates prevMovState = MovementStates.Grounded;
-
-    private void Awake() {
-        //Application.targetFrameRate = 60; 
-        //QualitySettings.vSyncCount = 1;   
-    }
+	#endregion
 
     void Start()
     {
+		soundManager = SoundManager.instance;
         Physics.gravity = new Vector3(0,-10,0);
         hitDetection = GetComponent<HitDetection>();
         rigidbody = GetComponent<Rigidbody>();
@@ -72,7 +71,8 @@ public class PlayerMovement : MonoBehaviour
 		
 	}
 
-    private void ReturnToSurface() 
+	#region CustomFunctions
+	private void ReturnToSurface() 
     {
 		
         if(returning)
@@ -269,6 +269,7 @@ public class PlayerMovement : MonoBehaviour
 		Debug.Log(!canDash);
 		return !canDash;
 	}
+	#endregion
 
 	private void OnTriggerEnter(Collider other)
 	{
@@ -283,4 +284,19 @@ public class PlayerMovement : MonoBehaviour
 				break;
 		}
 	}
+
+	#region AnimationEventCallbacks
+
+	public void PlayStepSound()
+	{
+		soundManager.PlaySound("Steps");
+	}
+
+	public void PlayDashSound()
+	{
+		soundManager.PlaySound("Dash");
+	}
+
+	#endregion
+
 }
