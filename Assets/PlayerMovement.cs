@@ -6,27 +6,35 @@ public class PlayerMovement : MonoBehaviour
 {
     HitDetection hitDetection;
     Rigidbody rigidbody;
-	Animation animation;
-	public AnimationClip walk, idle, jump;
+	Animator animator;
+
+	public ParticleSystem shadowDust;
 
     Vector3 m_Velocity = Vector3.zero;
-    [SerializeField] private float m_SmoothStep = .5f;
-    [SerializeField] private float jumpForce = 100f;
+    [SerializeField] private float m_SmoothStep = .01f;
+    [SerializeField] private float jumpForce = 150f;
+    [SerializeField] private float dashForce = 300f;
 
     [SerializeField] private bool jump;
     [SerializeField] private bool doubleJump;
-    [SerializeField] private float moveSpeed = 2f;
+    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private float dashSpeed = 10f;
+    public float dashCooldown = 3f;
+    [SerializeField] private float dashTime = 0.5f;
 
     [SerializeField] private bool grounded;
 	[SerializeField] private bool returning;
+	[SerializeField] private bool canDash = true;
 
+	[SerializeField] private bool facingRight;
 	float dir;
 
 	enum MovementStates
 	{
 		Grounded,
 		Falling,
-		Jumping
+		Jumping,
+		Dashing
 	};
 
 	MovementStates currentMovState = MovementStates.Grounded;
@@ -42,31 +50,34 @@ public class PlayerMovement : MonoBehaviour
         Physics.gravity = new Vector3(0,-10,0);
         hitDetection = GetComponent<HitDetection>();
         rigidbody = GetComponent<Rigidbody>();
-		animation = GetComponent<Animation>();
+		animator = GetComponent<Animator>();
+		facingRight = true;
+		canDash = true;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-		handleInput();
-		returnToSurface();
+		HandleInput();
+		ReturnToSurface();
+		
 	}
 
     private void FixedUpdate() 
     {
-        checkIfGrounded();
+		checkIfGrounded();
 		
-		move(dir, false);
-        
-    }
+		Move(dir, false);
+		
+	}
 
-    private void returnToSurface() 
+    private void ReturnToSurface() 
     {
 		
         if(returning)
         {
-			float step = 0.02f;
+			float step = 0.045f;
 			Vector3 stepVec = new Vector3(hitDetection.playerPosition.x, hitDetection.playerPosition.y + step, hitDetection.playerPosition.z) ;
 			if (!Physics.Raycast(stepVec, hitDetection.lightPosition - stepVec))
 			{
@@ -83,33 +94,52 @@ public class PlayerMovement : MonoBehaviour
 
 	private void changeMovState(MovementStates state)
 	{
-		if (currentMovState == state)
-			return;
+		
 		prevMovState = currentMovState;
 		currentMovState = state;
 
-		Debug.Log("Previous State:" + prevMovState);
+		
 		Debug.Log("Current State:" + currentMovState);
 	}
 
 
     private void checkIfGrounded() {
         if(hitDetection.isGrounded) {
-			changeMovState(MovementStates.Grounded);
+			if (prevMovState == MovementStates.Falling)
+			{
+				CreateDust();
+			}
+			if (currentMovState == MovementStates.Falling)
+				animator.SetBool("Jump", false);
+			if (currentMovState != MovementStates.Dashing)
+				changeMovState(MovementStates.Grounded);
             rigidbody.velocity = new Vector3(rigidbody.velocity.x,0f,rigidbody.velocity.z);
             Physics.gravity = Vector3.zero;
-			doubleJump = false;
-        } else {
+			doubleJump = false; 
+			
+
+		} else {
 			if (rigidbody.velocity.y > 0)
-				changeMovState(MovementStates.Jumping);
+			{
+				if (currentMovState != MovementStates.Dashing)
+					changeMovState(MovementStates.Jumping);
+			}				
+			else if (rigidbody.velocity.y < 0.1)
+			{
+				if (currentMovState != MovementStates.Dashing)
+					changeMovState(MovementStates.Falling);
+			}
 			else
-				changeMovState(MovementStates.Falling);
+			{
+				if (currentMovState != MovementStates.Dashing)
+					changeMovState(MovementStates.Grounded);
+			}
 
 			Physics.gravity = new Vector3(0,-10f,0);
         }
     }
 
-    private void move(float dir, bool crouch)
+    private void Move(float dir, bool crouch)
     {
 		Vector3 targetVelocity = new Vector3(0f, rigidbody.velocity.y, rigidbody.velocity.z);
 		// if we move left
@@ -136,6 +166,17 @@ public class PlayerMovement : MonoBehaviour
 
 		}
 
+		animator.SetFloat("Speed", Mathf.Abs(dir));
+
+		if (dir > 0 && !facingRight)
+		{
+			FlipPlayerModel();
+		}  else if (dir < 0 && facingRight)
+		{
+			FlipPlayerModel();
+		}
+
+
 		if (hitDetection.upBlocked)
 		{
 			Debug.Log("TEST");
@@ -144,13 +185,33 @@ public class PlayerMovement : MonoBehaviour
 			targetVelocity = new Vector3(rigidbody.velocity.x, -rigidbody.velocity.y, rigidbody.velocity.z);
 		}
 
+
+
 		rigidbody.velocity = Vector3.SmoothDamp(rigidbody.velocity, targetVelocity, ref m_Velocity, m_SmoothStep);
 	}
 
+	void FlipPlayerModel()
+	{
+		facingRight = !facingRight;
+		Vector3 scale = transform.localScale;
+		scale.x *= -1;
+		transform.localScale = scale;
+		CreateDust();
+	}
+
+	private void CreateDust()
+	{
+		shadowDust.Play();
+	}
 	void Jump()
 	{
 		if (currentMovState == MovementStates.Grounded)
+		{
+			CreateDust();
+			animator.SetBool("Jump", true);
 			rigidbody.AddForce(new Vector3(0, jumpForce, 0));
+			
+		}
 		else
 		{
 			//if (!doubleJump)
@@ -162,21 +223,51 @@ public class PlayerMovement : MonoBehaviour
 		}
 	}
 
-    private void handleInput() 
+	void DashAbility()
+	{
+		if (canDash)
+		{
+			Debug.Log("Dash");
+			StartCoroutine(Dash());
+		}
+	}
+
+    private void HandleInput() 
     {
         dir = Input.GetAxis("Horizontal");
-		
-        if (Input.GetKeyDown(KeyCode.Space)) {
+
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
 			Jump();
-        } else {
-        }
+		}
+		else if (Input.GetKeyDown(KeyCode.LeftShift)) {
+			DashAbility();
+			
+		}
+
     }
 
-	void changeAnimation() {
-		if (dir > 0) {
-			animation.clip = walk;
-			animation.Play();
-		}
+
+	private IEnumerator Dash()
+	{
+		canDash = false;
+		changeMovState(MovementStates.Dashing);
+		if (animator.GetBool("Jump"))
+			animator.SetBool("Jump", false);
+		animator.SetBool("Dash", true);
+		moveSpeed = dashSpeed;
+		yield return new WaitForSeconds(dashTime);
+		changeMovState(prevMovState);
+		moveSpeed = 3f;
+		animator.SetBool("Dash", false);
+		yield return new WaitForSeconds(dashCooldown);
+		canDash = true;
+	}
+	
+	public bool IsDashOnCD()
+	{
+		Debug.Log(!canDash);
+		return !canDash;
 	}
 
 	private void OnTriggerEnter(Collider other)

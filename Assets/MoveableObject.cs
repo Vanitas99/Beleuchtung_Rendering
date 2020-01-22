@@ -10,16 +10,12 @@ public class MoveableObject : MonoBehaviour
 
 	private Transform arrowZ, arrowX;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+	// Start is called before the first frame update
+	void Start()
+	{
 		color = GetComponent<Renderer>().material.color;
-		arrowZ = transform.Find("zArrow");
-		arrowX = transform.Find("xArrow");
-		arrowZ.gameObject.SetActive(false);
-		arrowX.gameObject.SetActive(false);
-	}
 
+	}
 	private void OnMouseEnter()
 	{
 		mouseOver = true;
@@ -53,7 +49,6 @@ public class MoveableObject : MonoBehaviour
 			GetComponent<Renderer>().material.color = Color.red;
 		}
 
-		arrowZ.rotation = arrowZ.rotation;
 
 
 	}

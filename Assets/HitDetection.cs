@@ -21,12 +21,12 @@ public class HitDetection : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		playerPosition = gameObject.transform.position + Vector3.down * 0.4f;
-		leftWallCollision = gameObject.transform.position + Vector3.left * 0.1f + Vector3.down * 0.3f;
-		rightWallCollision = gameObject.transform.position + Vector3.right * 0.1f + Vector3.down * 0.3f;
-		headCollision = gameObject.transform.position + Vector3.up * 0.3f;
+		playerPosition = gameObject.transform.position + Vector3.down * 0.6f;
+		leftWallCollision = gameObject.transform.position + Vector3.left * 0.1f + Vector3.down * 0.5f;
+		rightWallCollision = gameObject.transform.position + Vector3.right * 0.1f + Vector3.down * 0.5f;
+		headCollision = gameObject.transform.position + Vector3.up * 0.6f;
 		headRightWall = headCollision + Vector3.right * 0.2f + Vector3.down * 0.1f;
-		headLeftWall = headCollision + Vector3.left * 0.2f + Vector3.down * 0.1f;
+		headLeftWall = headCollision + Vector3.left * 0.1f + Vector3.down * 0.1f;
 
 
 		if (isPlayerGrounded())
