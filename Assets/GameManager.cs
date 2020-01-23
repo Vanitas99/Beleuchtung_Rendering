@@ -22,7 +22,8 @@ public class GameManager : MonoBehaviour
 	{
 		Building,
 		Playing,
-		Paused
+		Paused,
+        Done
 	}
 
 	public GameStage currentStage = GameStage.Playing;
@@ -96,4 +97,10 @@ public class GameManager : MonoBehaviour
 		timerRunning = false;
 		currentStage = GameStage.Playing;
 	}
+
+    public void Finished()
+    {
+        currentStage = GameStage.Done;
+        uiManager.LoadFinishMenu();
+    }
 }

@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
 	public GameObject pausePanel;
 	public GameObject timerPanel;
 	public GameObject dashPanel;
+    public GameObject finishPanel;
 
 
 	private void Awake()
@@ -31,6 +32,7 @@ public class UIManager : MonoBehaviour
 	{
 		deathPanel.SetActive(false);
 		pausePanel.SetActive(false);
+        finishPanel.SetActive(false);
 	}
 
 	public void LoadMenu()
@@ -75,6 +77,11 @@ public class UIManager : MonoBehaviour
 		dashPanel.SetActive(false);
 	}
 
+    public void LoadFinishMenu()
+    {
+        finishPanel.SetActive(true);
+        Cursor.visible = false;
+    }
 
 	#endregion
 

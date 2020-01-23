@@ -315,7 +315,8 @@ public class PlayerMovement : MonoBehaviour
 				GameManager.dead = true;
 				break;
 			case "Finish":
-				Debug.Log("Reached Finish");
+                //Debug.Log("Reached Finish");
+                GameManager.instance.Finished();
 				break;
 		}
 	}
