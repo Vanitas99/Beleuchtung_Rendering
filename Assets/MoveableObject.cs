@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class MoveableObject : MonoBehaviour
 {
-	float t;
-	public bool mouseOver = false, selected = false;
+	
+	public bool selected = false;
 	Color color;
 
-	private Transform arrowZ, arrowX;
 
 	// Start is called before the first frame update
 	void Start()
@@ -16,32 +15,11 @@ public class MoveableObject : MonoBehaviour
 		color = GetComponent<Renderer>().material.color;
 
 	}
-	private void OnMouseEnter()
-	{
-		mouseOver = true;
-		Debug.Log("slrt");
-	}
 
-	private void OnMouseOver()
-	{
-		mouseOver = true;
-		if (Input.GetMouseButtonDown(0))
-		{
-			MoveManager.Instance.RegisterSelectedObject(gameObject);
-		}
-	}
-
-	private void OnMouseExit()
-	{
-		mouseOver = false;
-
-	}
-
-	// Update is called once per frame
 	void Update()
     {
-		t += Time.deltaTime;
-		if (!mouseOver && !selected)
+	
+		if (!selected)
 		{
 			GetComponent<Renderer>().material.color = color;
 		} else
@@ -53,19 +31,17 @@ public class MoveableObject : MonoBehaviour
 
 	}
 
-	public void changeActiveState() 
+	public void ChangeActiveState() 
 	{
 		selected = !selected;
 		if (selected)
 		{
 			GetComponent<Renderer>().material.color = Color.red;
-			arrowZ.gameObject.SetActive(true);
-			arrowX.gameObject.SetActive(true);
+			
 		} else
 		{
 			GetComponent<Renderer>().material.color = color;
-			arrowZ.gameObject.SetActive(false);
-			arrowX.gameObject.SetActive(false);
+			
 		}
 	}
 

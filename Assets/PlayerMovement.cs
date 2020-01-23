@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool grounded;
 	[SerializeField] private bool returning;
 	[SerializeField] private bool canDash = true;
-
+	
 	[SerializeField] private bool facingRight;
 	float dir;
 
@@ -94,40 +94,47 @@ public class PlayerMovement : MonoBehaviour
 
 	private void changeMovState(MovementStates state)
 	{
-		
-		prevMovState = currentMovState;
-		currentMovState = state;
+		if (currentMovState != state)
+		{
+			prevMovState = currentMovState;
+			currentMovState = state;
 
-		
-		Debug.Log("Current State:" + currentMovState);
+		}
+
+
+		//Debug.Log("Current State:" + currentMovState);
+		//Debug.Log("PRev State:" + prevMovState);
 	}
 
 
     private void checkIfGrounded() {
         if(hitDetection.isGrounded) {
-			if (prevMovState == MovementStates.Falling)
-			{
-				CreateDust();
-			}
+		
 			if (currentMovState == MovementStates.Falling)
+			{
 				animator.SetBool("Jump", false);
+				
+			}
 			if (currentMovState != MovementStates.Dashing)
 				changeMovState(MovementStates.Grounded);
             rigidbody.velocity = new Vector3(rigidbody.velocity.x,0f,rigidbody.velocity.z);
             Physics.gravity = Vector3.zero;
-			doubleJump = false; 
+			doubleJump = false;
 			
-
 		} else {
 			if (rigidbody.velocity.y > 0)
 			{
 				if (currentMovState != MovementStates.Dashing)
 					changeMovState(MovementStates.Jumping);
-			}				
-			else if (rigidbody.velocity.y < 0.1)
+			}
+			else if (rigidbody.velocity.y < 0f /*&& prevMovState == MovementStates.Jumping*/)
 			{
-				if (currentMovState != MovementStates.Dashing)
+				//Debug.Log("lol");
+				if (currentMovState != MovementStates.Dashing )
+				{
 					changeMovState(MovementStates.Falling);
+					//Debug.Log("Test");
+				}
 			}
 			else
 			{
@@ -179,7 +186,7 @@ public class PlayerMovement : MonoBehaviour
 
 		if (hitDetection.upBlocked)
 		{
-			Debug.Log("TEST");
+			
 			// TODO GOTTA FIX'EM
 			//	rigidbody.velocity = new Vector3(0f, 0f, 0f);
 			targetVelocity = new Vector3(rigidbody.velocity.x, -rigidbody.velocity.y, rigidbody.velocity.z);
@@ -205,7 +212,8 @@ public class PlayerMovement : MonoBehaviour
 	}
 	void Jump()
 	{
-		if (currentMovState == MovementStates.Grounded)
+		if ((currentMovState == MovementStates.Grounded && prevMovState == MovementStates.Falling)
+			|| (currentMovState == MovementStates.Falling && prevMovState == MovementStates.Grounded) )
 		{
 			CreateDust();
 			animator.SetBool("Jump", true);
@@ -234,16 +242,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleInput() 
     {
-        dir = Input.GetAxis("Horizontal");
-
-		if (Input.GetKeyDown(KeyCode.Space))
+		if (GameManager.instance.currentStage == GameManager.GameStage.Playing)
 		{
-			Jump();
+			dir = Input.GetAxis("Horizontal");
+
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+				Jump();
+			}
+			else if (Input.GetKeyDown(KeyCode.LeftShift))
+			{
+				DashAbility();
+
+			}
 		}
-		else if (Input.GetKeyDown(KeyCode.LeftShift)) {
-			DashAbility();
-			
-		}
+        
 
     }
 
@@ -264,9 +277,19 @@ public class PlayerMovement : MonoBehaviour
 		canDash = true;
 	}
 	
+	public void ZeroVelocity()
+	{
+		rigidbody.velocity = Vector3.zero;
+		dir = 0;
+	}
+
+	public Vector3 GetCurrentVelocity()
+	{
+		return rigidbody.velocity;
+	}
 	public bool IsDashOnCD()
 	{
-		Debug.Log(!canDash);
+		
 		return !canDash;
 	}
 	#endregion
@@ -276,8 +299,14 @@ public class PlayerMovement : MonoBehaviour
 
 		switch(other.tag)
 		{
+			case "TimerTrigger":
+				GameManager.instance.StartTimer();
+				
+				Debug.Log("Entered Timer Area");
+				break;
 			case "TrapStar":
 				Destroy(gameObject);
+				GameManager.dead = true;
 				break;
 			case "Finish":
 				Debug.Log("Reached Finish");

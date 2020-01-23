@@ -22,7 +22,8 @@ public class DashFollowPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		playerPosition = player.transform.position + Vector3.up ;
+		if (player.gameObject != null)
+			playerPosition = player.transform.position + Vector3.up ;
 		
 		transform.position = playerPosition;
 
