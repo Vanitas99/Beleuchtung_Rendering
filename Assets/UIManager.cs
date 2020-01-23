@@ -27,6 +27,12 @@ public class UIManager : MonoBehaviour
 
 	#region Loading Functionality
 
+	public void FreshStart()
+	{
+		deathPanel.SetActive(false);
+		pausePanel.SetActive(false);
+	}
+
 	public void LoadMenu()
 	{
 		SceneManager.LoadScene(0);
@@ -63,14 +69,17 @@ public class UIManager : MonoBehaviour
 
 	public void LoadPauseMenu()
 	{
+		pausePanel.SetActive(true);
 		Cursor.visible = true;
 		timerPanel.SetActive(false);
-		pausePanel.SetActive(true);
 		dashPanel.SetActive(false);
 	}
 
 
 	#endregion
+
+
+	
 
 	#region Button Functionality
 

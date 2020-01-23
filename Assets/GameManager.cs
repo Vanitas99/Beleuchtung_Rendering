@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 	private MoveManager moveManager;
 	public GameObject player;
 
-
+	
 	public enum GameStage
 	{
 		Building,
@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
-			if (gameIsPaused)
+			if (currentStage == GameStage.Paused)
 			{
 				Resume();
 			}
@@ -59,8 +59,8 @@ public class GameManager : MonoBehaviour
 
 	private void Start()
 	{
-		uiManager.UnloadPauseMenu();
-		uiManager.UnloadDeathScreen();
+		uiManager.FreshStart();
+		
 	}
 
 
@@ -75,7 +75,6 @@ public class GameManager : MonoBehaviour
 		currentStage = prevStage;
 		uiManager.UnloadPauseMenu();
 		Time.timeScale = 1f;
-		gameIsPaused = false;
 	}
 
 	public void Pause()
@@ -84,7 +83,7 @@ public class GameManager : MonoBehaviour
 		currentStage = GameStage.Paused;
 		uiManager.LoadPauseMenu();
 		Time.timeScale = 0f;
-		gameIsPaused = true;
+
 	}
 
 	private IEnumerator BuildingTimer(float time)

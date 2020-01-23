@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rigidbody;
 	Animator animator;
 
-	public ParticleSystem shadowDust;
+	
 	private SoundManager soundManager;
 
     Vector3 m_Velocity = Vector3.zero;
@@ -30,6 +30,10 @@ public class PlayerMovement : MonoBehaviour
 	
 	[SerializeField] private bool facingRight;
 	float dir;
+
+	[Header("Particles")]
+	public ParticleSystem deathParticleSystem;
+	public ParticleSystem shadowDust;
 
 	enum MovementStates
 	{
@@ -305,6 +309,8 @@ public class PlayerMovement : MonoBehaviour
 				Debug.Log("Entered Timer Area");
 				break;
 			case "TrapStar":
+				deathParticleSystem.transform.position = transform.position;
+				deathParticleSystem.Play();
 				Destroy(gameObject);
 				GameManager.dead = true;
 				break;
