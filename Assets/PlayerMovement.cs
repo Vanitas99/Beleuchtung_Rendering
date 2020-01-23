@@ -296,23 +296,31 @@ public class PlayerMovement : MonoBehaviour
 		
 		return !canDash;
 	}
-	#endregion
 
-	private void OnTriggerEnter(Collider other)
+    private void OnDeath()
+    {
+        deathParticleSystem.transform.position = transform.position;
+        deathParticleSystem.Play();
+        //Destroy(gameObject);
+        //gameObject.transform.localScale = Vector3.zero;
+        //ZeroVelocity();
+        gameObject.SetActive(false);
+        GameManager.instance.currentStage = GameManager.GameStage.Done;
+    }
+    #endregion
+
+    private void OnTriggerEnter(Collider other)
 	{
 
 		switch(other.tag)
 		{
 			case "TimerTrigger":
 				GameManager.instance.StartTimer();
-				
+                other.gameObject.SetActive(false);
 				Debug.Log("Entered Timer Area");
 				break;
 			case "TrapStar":
-				deathParticleSystem.transform.position = transform.position;
-				deathParticleSystem.Play();
-				Destroy(gameObject);
-				GameManager.dead = true;
+                OnDeath();
 				break;
 			case "Finish":
                 //Debug.Log("Reached Finish");
@@ -320,6 +328,7 @@ public class PlayerMovement : MonoBehaviour
 				break;
 		}
 	}
+
 
 	#region AnimationEventCallbacks
 
@@ -334,5 +343,6 @@ public class PlayerMovement : MonoBehaviour
 	}
 
 	#endregion
+
 
 }

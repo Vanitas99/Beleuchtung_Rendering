@@ -30,9 +30,15 @@ public class UIManager : MonoBehaviour
 
 	public void FreshStart()
 	{
-		deathPanel.SetActive(false);
-		pausePanel.SetActive(false);
+        deathPanel.SetActive(false);
+        pausePanel.SetActive(false);
         finishPanel.SetActive(false);
+        dashPanel.SetActive(true);
+
+        //GameManager.instance.player.transform.localScale = new Vector3(1, 1, 1);
+        GameManager.instance.player.SetActive(true);
+        //GameManager.instance.player.GetComponent<PlayerMovement>().ZeroVelocity();
+        GameManager.instance.player.transform.position = GameManager.instance.playerPosition;
 	}
 
 	public void LoadMenu()
@@ -59,7 +65,8 @@ public class UIManager : MonoBehaviour
 		timerPanel.SetActive(true);
 		dashPanel.SetActive(true);
 		deathPanel.SetActive(false);
-	}
+        GameManager.instance.player.SetActive(true);
+    }
 
 	public void UnloadPauseMenu()
 	{
@@ -102,8 +109,8 @@ public class UIManager : MonoBehaviour
 
 	public void OnRetry()
 	{
-		UnloadDeathScreen();
-		//SceneManager.LoadScene(1);
+        GameManager.instance.currentStage = GameManager.GameStage.Playing;
+        FreshStart();
 	}
 
 	#endregion

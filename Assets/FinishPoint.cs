@@ -18,6 +18,7 @@ public class FinishPoint : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate()
 	{
-		transform.position = Vector3.Lerp(pos1, pos2, (Mathf.Sin(speed * Time.time) + 1.0f) / 2.0f) ;
+		transform.position = Vector3.Lerp(pos1, pos2, (Mathf.Sin(speed * Time.time) + 1.0f) / 2.0f);
+        transform.Rotate(new Vector3(0,0, 0.5f * Mathf.Sin(5 * speed * Time.time)));
 	}
 }

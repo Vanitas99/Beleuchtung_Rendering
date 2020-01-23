@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 	private MoveManager moveManager;
 	public GameObject player;
 
+    public Vector3 playerPosition;
 	
 	public enum GameStage
 	{
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
 		uiManager = UIManager.instance;
 		moveManager = MoveManager.Instance;
 		currentStage = GameStage.Playing;
+        playerPosition = player.transform.position;
 	}
 
 	public void Update()
@@ -52,16 +54,19 @@ public class GameManager : MonoBehaviour
 			}
 		}
 
-		if (dead)
+		if (currentStage == GameStage.Done)
 		{
 			uiManager.LoadDeathScreen();
 		}
+        else
+        {
+            uiManager.UnloadDeathScreen();
+        }
 	}
 
 	private void Start()
 	{
-		uiManager.FreshStart();
-		
+		uiManager.FreshStart();		
 	}
 
 
