@@ -10,7 +10,8 @@ public class UIManager : MonoBehaviour
 	[Header("Panels for UI")]
 	public GameObject deathPanel;
 	public GameObject pausePanel;
-
+	public GameObject timerPanel;
+	public GameObject dashPanel;
 
 
 	private void Awake()
@@ -38,13 +39,17 @@ public class UIManager : MonoBehaviour
 	public void LoadDeathScreen()
 	{
 		UnloadPauseMenu();
-		Cursor.visible = false;
+		Cursor.visible = true;
 		deathPanel.SetActive(true);
+		timerPanel.SetActive(false);
+		dashPanel.SetActive(false);
 	}
 	public void UnloadDeathScreen()
 	{
 		//UnloadPauseMenu();
-		Cursor.visible = true;
+		Cursor.visible = false;
+		timerPanel.SetActive(true);
+		dashPanel.SetActive(true);
 		deathPanel.SetActive(false);
 	}
 
@@ -52,12 +57,16 @@ public class UIManager : MonoBehaviour
 	{
 		Cursor.visible = false;
 		pausePanel.SetActive(false);
+		timerPanel.SetActive(true);
+		dashPanel.SetActive(true);
 	}
 
 	public void LoadPauseMenu()
 	{
 		Cursor.visible = true;
+		timerPanel.SetActive(false);
 		pausePanel.SetActive(true);
+		dashPanel.SetActive(false);
 	}
 
 
@@ -67,9 +76,7 @@ public class UIManager : MonoBehaviour
 
 	public void OnResume()
 	{
-		UnloadPauseMenu();
-		Time.timeScale = 1f;
-		GameManager.gameIsPaused = false;
+		GameManager.instance.Resume();
 	}
 
 	public void OnQuit()

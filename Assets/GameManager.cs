@@ -21,10 +21,12 @@ public class GameManager : MonoBehaviour
 	public enum GameStage
 	{
 		Building,
-		Playing
+		Playing,
+		Paused
 	}
 
 	public GameStage currentStage = GameStage.Playing;
+	public GameStage prevStage = GameStage.Paused;
 
 	void Awake()
 	{
@@ -68,15 +70,18 @@ public class GameManager : MonoBehaviour
 		StartCoroutine(BuildingTimer(buildingTimer));
 	}
 
-	void Resume()
+	public void Resume()
 	{
+		currentStage = prevStage;
 		uiManager.UnloadPauseMenu();
 		Time.timeScale = 1f;
 		gameIsPaused = false;
 	}
 
-	void Pause()
+	public void Pause()
 	{
+		prevStage = currentStage;
+		currentStage = GameStage.Paused;
 		uiManager.LoadPauseMenu();
 		Time.timeScale = 0f;
 		gameIsPaused = true;
