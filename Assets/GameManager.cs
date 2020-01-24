@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour
 		Building,
 		Playing,
 		Paused,
-        Done
+        Done,
+		Dead
 	}
 
 	public GameStage currentStage = GameStage.Playing;
@@ -52,9 +53,13 @@ public class GameManager : MonoBehaviour
 			{
 				Pause();
 			}
+
+			if (currentStage == GameStage.Done) {
+				uiManager.OnQuit();
+			}
 		}
 
-		if (currentStage == GameStage.Done)
+		if (currentStage == GameStage.Dead)
 		{
 			uiManager.LoadDeathScreen();
 		}

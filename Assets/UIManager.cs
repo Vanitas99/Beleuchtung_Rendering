@@ -109,8 +109,7 @@ public class UIManager : MonoBehaviour
 
 	public void OnRetry()
 	{
-        GameManager.instance.currentStage = GameManager.GameStage.Playing;
-        FreshStart();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 
 	#endregion

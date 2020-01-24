@@ -22,7 +22,8 @@ public class CameraFollow : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		if (GameManager.instance.currentStage == GameManager.GameStage.Playing)
+		if (GameManager.instance.currentStage == GameManager.GameStage.Playing 
+		|| GameManager.instance.currentStage == GameManager.GameStage.Dead) 
 		{
 			ChangeToPlayingMode();
 			Vector3 targetVelocity = target.gameObject.GetComponent<PlayerMovement>().GetCurrentVelocity();

@@ -216,8 +216,9 @@ public class PlayerMovement : MonoBehaviour
 	}
 	void Jump()
 	{
-		if ((currentMovState == MovementStates.Grounded && prevMovState == MovementStates.Falling)
-			|| (currentMovState == MovementStates.Falling && prevMovState == MovementStates.Grounded) )
+		/*if ((currentMovState == MovementStates.Grounded && prevMovState == MovementStates.Falling)
+			|| (currentMovState == MovementStates.Falling && prevMovState == MovementStates.Grounded) )*/
+		if (!(currentMovState == MovementStates.Falling && prevMovState == MovementStates.Jumping) && !(currentMovState == MovementStates.Jumping))
 		{
 			CreateDust();
 			animator.SetBool("Jump", true);
@@ -305,7 +306,7 @@ public class PlayerMovement : MonoBehaviour
         //gameObject.transform.localScale = Vector3.zero;
         //ZeroVelocity();
         gameObject.SetActive(false);
-        GameManager.instance.currentStage = GameManager.GameStage.Done;
+        GameManager.instance.currentStage = GameManager.GameStage.Dead;
     }
     #endregion
 
