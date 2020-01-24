@@ -193,7 +193,7 @@ public class PlayerMovement : MonoBehaviour
 			
 			// TODO GOTTA FIX'EM
 			//	rigidbody.velocity = new Vector3(0f, 0f, 0f);
-			targetVelocity = new Vector3(rigidbody.velocity.x, -rigidbody.velocity.y, rigidbody.velocity.z);
+			targetVelocity = new Vector3(rigidbody.velocity.x, -rigidbody.velocity.y - 2f, rigidbody.velocity.z);
 		}
 
 
