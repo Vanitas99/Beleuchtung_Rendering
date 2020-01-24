@@ -8,6 +8,7 @@ TagManager:
   - ShadowCastingCubes
   - TrapStar
   - TimerTrigger
+  - Death
   layers:
   - Default
   - TransparentFX

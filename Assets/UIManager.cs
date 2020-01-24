@@ -65,7 +65,8 @@ public class UIManager : MonoBehaviour
 		timerPanel.SetActive(true);
 		dashPanel.SetActive(true);
 		deathPanel.SetActive(false);
-        GameManager.instance.player.SetActive(true);
+		if (GameManager.instance.player)
+			GameManager.instance.player.SetActive(true);
     }
 
 	public void UnloadPauseMenu()
@@ -79,9 +80,10 @@ public class UIManager : MonoBehaviour
 	public void LoadPauseMenu()
 	{
 		pausePanel.SetActive(true);
-		Cursor.visible = true;
+		Cursor.visible = false;
 		timerPanel.SetActive(false);
 		dashPanel.SetActive(false);
+
 	}
 
     public void LoadFinishMenu()

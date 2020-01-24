@@ -323,9 +323,14 @@ public class PlayerMovement : MonoBehaviour
 			case "TrapStar":
                 OnDeath();
 				break;
+			case "Death":
+				OnDeath();
+				break;
 			case "Finish":
                 //Debug.Log("Reached Finish");
                 GameManager.instance.Finished();
+				animator.SetBool("Jump", false);
+				animator.SetFloat("Speed", 0f);
 				break;
 		}
 	}

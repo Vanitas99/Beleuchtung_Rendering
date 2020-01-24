@@ -112,5 +112,6 @@ public class GameManager : MonoBehaviour
     {
         currentStage = GameStage.Done;
         uiManager.LoadFinishMenu();
+		Destroy(player);
     }
 }
